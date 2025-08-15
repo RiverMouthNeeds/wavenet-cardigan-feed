@@ -137,7 +137,7 @@ const series = [...byTs.values()].map(e => {
   };
   if (obj.dir == null && e.raw["W_PDIR"] != null) obj.dir = e.raw["W_PDIR"];
   return obj;
-})).sort((a,b)=>a.ts.localeCompare(b.ts));
+}).sort((a,b)=>a.ts.localeCompare(b.ts));
 
 const latest = series.at(-1) ?? null;
 
