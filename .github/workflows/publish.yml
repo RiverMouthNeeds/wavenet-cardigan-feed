@@ -1,0 +1,37 @@
+name: publish-cefas-cardigan
+on:
+  schedule:
+    # 5 and 35 past each hour (UTC) to avoid racing the half-hour post
+    - cron: "5,35 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci || npm i
+      - name: Fetch Cefas CSV and build public files
+        env:
+          CEFAS_RECORDSET_ID: ${{ vars.CEFAS_RECORDSET_ID }}
+          STATION_CODE: ${{ vars.STATION_CODE }}
+          PLATFORM_ID: ${{ vars.PLATFORM_ID }}
+        run: node fetch_cefas.mjs
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
