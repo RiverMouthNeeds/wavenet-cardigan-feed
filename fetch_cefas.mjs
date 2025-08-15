@@ -126,13 +126,17 @@ function pickField(raw, patterns) {
 }
 const mk = arr => arr.map(s => new RegExp(s));
 
-const series = [...byTs.values()].map(e => ({
-  ts: e.ts,
-  hm0: pickField(e.raw, mk(["^hm0$", "significantwaveheight", "^hs$", "hm0m"])),
-  tp:  pickField(e.raw, mk(["^tpeak$", "^tp$", "peakperiod", "^tpp$"])),
-  tz:  pickField(e.raw, mk(["^tz$", "^t02$", "zerocross"])),
-  dir: pickField(e.raw, mk(["^w_pdir$", "^wpdir$", "^dp$", "peakdirection", "^mwd$", "meandirection", "^direction$"])),
-  raw: e.raw
+const series = [...byTs.values()].map(e => {
+  const obj = {
+    ts: e.ts,
+    hm0: pickField(e.raw, mk(["^hm0$", "significantwaveheight", "^hs$", "hm0m"])),
+    tp:  pickField(e.raw, mk(["^tpeak$", "^tp$", "peakperiod", "^tpp$"])),
+    tz:  pickField(e.raw, mk(["^tz$", "^t02$", "zerocross"])),
+    dir: pickField(e.raw, mk(["^w_pdir$", "^wpdir$", "^dp$", "peakdirection", "^mwd$", "meandirection", "^direction$"])),
+    raw: e.raw
+  };
+  if (obj.dir == null && e.raw["W_PDIR"] != null) obj.dir = e.raw["W_PDIR"];
+  return obj;
 })).sort((a,b)=>a.ts.localeCompare(b.ts));
 
 const latest = series.at(-1) ?? null;
