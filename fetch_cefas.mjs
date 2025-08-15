@@ -131,7 +131,7 @@ const series = [...byTs.values()].map(e => ({
   hm0: pickField(e.raw, mk(["^hm0$", "significantwaveheight", "^hs$", "hm0m"])),
   tp:  pickField(e.raw, mk(["^tpeak$", "^tp$", "peakperiod", "^tpp$"])),
   tz:  pickField(e.raw, mk(["^tz$", "^t02$", "zerocross"])),
-  dir: pickField(e.raw, mk(["^w_pdir$", "^dp$", "peakdirection", "^mwd$", "meandirection", "^direction$"])),
+  dir: pickField(e.raw, mk(["^w_pdir$", "^wpdir$", "^dp$", "peakdirection", "^mwd$", "meandirection", "^direction$"])),
   raw: e.raw
 })).sort((a,b)=>a.ts.localeCompare(b.ts));
 
